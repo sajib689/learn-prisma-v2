@@ -1,13 +1,15 @@
-// Attempt to load PrismaClient dynamically so that the project
-// can show a clear error when @prisma/client is not installed.
-declare const require: any;
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
 
-let PrismaClient: any;
-try {
-	// Use require to avoid TypeScript compile-time error if the package is missing.
-	PrismaClient = require("@prisma/client").PrismaClient;
-} catch (err) {
-	throw new Error("Cannot find module '@prisma/client'. Install it with `npm install @prisma/client` and run `npx prisma generate`.");
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+	throw new Error("DATABASE_URL is not set");
 }
 
-export const prisma = new PrismaClient();
+const adapter = new PrismaPg(connectionString);
+
+export const prisma = new PrismaClient({
+	adapter,
+});
