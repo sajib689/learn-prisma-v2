@@ -1,8 +1,8 @@
 import compression from "compression";
 import cors from "cors";
 import express from "express";
-import { userRouter } from "./modules/user/user.routes";
 import { postRouter } from "./modules/post/post.router";
+import { userRouter } from "./modules/user/user.routes";
 
 const app = express();
 
