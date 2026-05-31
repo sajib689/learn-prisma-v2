@@ -10,8 +10,11 @@ const createPostService = async (payload: Prisma.PostCreateInput) => {
 };
 
 // get all posts service
-const getAllPostsService = async () => {
-  const posts = await prisma.post.findMany();
+const getAllPostsService = async ({ page, limit }: { page?: number; limit?: number }) => {
+  const posts = await prisma.post.findMany({
+    skip: page,
+    take: limit ,
+  });
   return posts;
 };
 
