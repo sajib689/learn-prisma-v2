@@ -24,7 +24,7 @@ const getAllPostsService = async ({
   tags?: string[];
 }) => {
   const skip = (page - 1) * limit;
-
+  console.log({  tags });
   const where: any = {
     AND: [
       search && {
@@ -46,7 +46,7 @@ const getAllPostsService = async ({
       typeof isFeatured === "boolean" && {
         isFeatured,
       },
-      
+
     ].filter(Boolean),
   };
 
