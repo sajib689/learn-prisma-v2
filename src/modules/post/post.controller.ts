@@ -23,12 +23,14 @@ const getAllPostsController = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 10;
     const search = (req.query.search as string) || "";
     const isFeatured = req.query.isFeatured ? req.query.isFeatured === "true" : undefined
+    const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
 
     const result = await postService.getAllPostsService({
       page,
       limit,
       search,
-      isFeatured
+      isFeatured,
+      tags
     });
     res.status(200).json({
       message: "Posts fetched successfully",

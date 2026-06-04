@@ -15,11 +15,13 @@ const getAllPostsService = async ({
   limit,
   search,
   isFeatured,
+  tags
 }: {
   page: number;
   limit: number;
   search: string;
   isFeatured?: boolean;
+  tags?: string[];
 }) => {
   const skip = (page - 1) * limit;
 
