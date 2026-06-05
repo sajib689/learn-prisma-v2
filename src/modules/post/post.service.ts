@@ -129,6 +129,33 @@ const updatePostByIdService = async (
   });
   return result;
 };
+// get statistics service
+
+const getStatisticsService = async () => {
+  try {
+    return await prisma.$transaction(async (tnx) => {
+      const aggregate = await tnx.post.aggregate({
+        _count: true,
+        _sum: {
+          views: true,
+        },
+        _avg: {
+          views: true,
+        },
+        _min: {
+          views: true,
+        },
+        _max: {
+          views: true,
+        },
+      });
+      return aggregate;
+    });
+  } catch (error) {
+    console.error("Error fetching statistics:", error);
+    throw new Error("Failed to fetch statistics");
+  }
+};
 
 export const postService = {
   createPostService,
@@ -136,4 +163,5 @@ export const postService = {
   findPostByIdService,
   deletePostByIdService,
   updatePostByIdService,
+  getStatisticsService
 };

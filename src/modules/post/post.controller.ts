@@ -22,7 +22,9 @@ const getAllPostsController = async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const search = (req.query.search as string) || "";
-    const isFeatured = req.query.isFeatured ? req.query.isFeatured === "true" : undefined
+    const isFeatured = req.query.isFeatured
+      ? req.query.isFeatured === "true"
+      : undefined;
     const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
 
     const result = await postService.getAllPostsService({
@@ -30,7 +32,7 @@ const getAllPostsController = async (req: Request, res: Response) => {
       limit,
       search,
       isFeatured,
-      tags
+      tags,
     });
     res.status(200).json({
       message: "Posts fetched successfully",
@@ -47,7 +49,7 @@ const getAllPostsController = async (req: Request, res: Response) => {
 const findPostByIdController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    if (!id) {
+    if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({
         message: "Post ID is required",
       });
@@ -68,7 +70,7 @@ const findPostByIdController = async (req: Request, res: Response) => {
 const deletePostByIdController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    if (!id) {
+    if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({
         message: "Post ID is required",
       });
@@ -89,7 +91,7 @@ const deletePostByIdController = async (req: Request, res: Response) => {
 const updatePostByIdController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    if (!id) {
+    if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({
         message: "Post ID is required",
       });
@@ -107,10 +109,28 @@ const updatePostByIdController = async (req: Request, res: Response) => {
   }
 };
 
+// post statistics controller
+const getStatisticsController = async (req: Request, res: Response) => {
+  try {
+    const result = await postService.getStatisticsService();
+    res.status(200).json({
+      message: "Statistics fetched successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error fetching statistics:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+
 export const postController = {
   createPostController,
   getAllPostsController,
   findPostByIdController,
   deletePostByIdController,
   updatePostByIdController,
+  getStatisticsController
 };
