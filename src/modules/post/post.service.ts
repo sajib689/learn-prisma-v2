@@ -149,7 +149,22 @@ const getStatisticsService = async () => {
           views: true,
         },
       });
-      return aggregate;
+      const featuredCount = await prisma.post.count({
+        where: {
+          isFeatured: true,
+        },
+      });
+      return {
+       stats: {
+          totalPosts: aggregate._count,
+          totalViews: aggregate._sum.views || 0,
+          averageViews: aggregate._avg.views || 0,
+          minViews: aggregate._min.views || 0,
+          maxViews: aggregate._max.views || 0,
+          featuredPosts: featuredCount,
+ 
+       }
+      };
     });
   } catch (error) {
     console.error("Error fetching statistics:", error);
@@ -163,5 +178,5 @@ export const postService = {
   findPostByIdService,
   deletePostByIdService,
   updatePostByIdService,
-  getStatisticsService
+  getStatisticsService,
 };
