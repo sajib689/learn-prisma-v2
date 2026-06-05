@@ -62,6 +62,10 @@ const getAllPostsService = async ({
     skip,
     take: limit,
     where,
+    orderBy: {
+      createdAt: "desc",
+    },
+
   });
 
   const total = await prisma.post.count({ where });
@@ -73,7 +77,7 @@ const getAllPostsService = async ({
       limit,
       total,
       totalPages: Math.ceil(total / limit),
-    }
+    },
   };
 };
 
