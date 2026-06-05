@@ -63,7 +63,18 @@ const getAllPostsService = async ({
     take: limit,
     where,
   });
-  return posts;
+
+  const total = await prisma.post.count({ where });
+
+  return {
+    data: posts,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    }
+  };
 };
 
 // find post by id service
