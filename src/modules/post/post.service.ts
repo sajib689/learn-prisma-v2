@@ -65,7 +65,6 @@ const getAllPostsService = async ({
     orderBy: {
       createdAt: "desc",
     },
-
   });
 
   const total = await prisma.post.count({ where });
@@ -83,6 +82,19 @@ const getAllPostsService = async ({
 
 // find post by id service
 const findPostByIdService = async (id: number) => {
+  // increment views by 1
+  await prisma.post.update({
+    where: {
+      id,
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+  });
+  
+// fetch the post after incrementing views to return the updated post data
   const result = await prisma.post.findUnique({
     where: {
       id,
