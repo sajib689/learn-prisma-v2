@@ -15,7 +15,7 @@ const getAllPostsService = async ({
   limit,
   search,
   isFeatured,
-  tags
+  tags,
 }: {
   page: number;
   limit: number;
@@ -24,9 +24,10 @@ const getAllPostsService = async ({
   tags?: string[];
 }) => {
   const skip = (page - 1) * limit;
-  console.log({  tags });
+
   const where: any = {
     AND: [
+      // only add search filter if search query is provided
       search && {
         OR: [
           {
@@ -43,10 +44,17 @@ const getAllPostsService = async ({
           },
         ],
       },
+      // only add isFeatured filter if it's explicitly provided (true or false)
       typeof isFeatured === "boolean" && {
         isFeatured,
       },
-
+      // only add tags filter if tags array is provided and not empty
+      tags &&
+        tags.length > 0 && {
+          tags: {
+            hasEvery: tags,
+          },
+        },
     ].filter(Boolean),
   };
 
