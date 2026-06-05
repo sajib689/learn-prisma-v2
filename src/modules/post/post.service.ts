@@ -154,6 +154,13 @@ const getStatisticsService = async () => {
           isFeatured: true,
         },
       });
+
+      const topFeaturedPosts = await prisma.post.findFirst({
+        where: {
+          isFeatured: true,
+        }
+      })
+
       return {
        stats: {
           totalPosts: aggregate._count,
@@ -162,7 +169,7 @@ const getStatisticsService = async () => {
           minViews: aggregate._min.views || 0,
           maxViews: aggregate._max.views || 0,
           featuredPosts: featuredCount,
- 
+          topFeaturedPosts
        }
       };
     });
