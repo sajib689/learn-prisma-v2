@@ -12,14 +12,17 @@ const loginServiceWithEmailAndPassword = async (
         email,
       },
     });
-    
+
     if (!user) {
-        throw new Error("Invalid email or password");
+      throw new Error("Invalid email or password");
     }
     if (user.password !== password) {
-        throw new Error("Invalid email or password");
+      throw new Error("Invalid email or password");
     }
-
+    if (user.password === password) {
+      return user;
+    }
+    
   } catch (error: any) {
     console.error("Error during login:", error);
     throw new Error(error.message);
