@@ -82,23 +82,26 @@ const getAllPostsService = async ({
 
 // find post by id service
 const findPostByIdService = async (id: number) => {
-  // increment views by 1
-  await prisma.post.update({
-    where: {
-      id,
-    },
-    data: {
-      views: {
-        increment: 1,
+  const result = await prisma.$transaction(async (tnx) => {
+    // increment views by 1
+    await tnx.post.update({
+      where: {
+        id,
       },
-    },
-  });
-  
-// fetch the post after incrementing views to return the updated post data
-  const result = await prisma.post.findUnique({
-    where: {
-      id,
-    },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
+    // fetch the post after incrementing views to return the updated post data
+    const postData = await tnx.post.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return postData;
   });
   return result;
 };
